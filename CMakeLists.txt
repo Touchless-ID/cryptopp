@@ -78,8 +78,8 @@ endif()
 #============================================================================
 
 option(BUILD_STATIC "Build static library" ON)
-option(BUILD_SHARED "Build shared library" ON)
-option(BUILD_TESTING "Build library tests" ON)
+option(BUILD_SHARED "Build shared library" OFF)
+option(BUILD_TESTING "Build library tests" OFF)
 option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(USE_INTERMEDIATE_OBJECTS_TARGET "Use a common intermediate objects target for the static and shared library targets" ON)
 
@@ -113,7 +113,8 @@ option(DISABLE_POWER7 "Disable POWER7" OFF)
 option(DISABLE_POWER8 "Disable POWER8" OFF)
 option(DISABLE_POWER9 "Disable POWER9" OFF)
 
-set(CRYPTOPP_DATA_DIR ${CRYPTOPP_PROJECT_DIR}/TestData CACHE PATH "Crypto++ test data directory")
+#set(CRYPTOPP_DATA_DIR ${CRYPTOPP_PROJECT_DIR}/TestData CACHE PATH "Crypto++ test data directory")
+set(CRYPTOPP_DATA_DIR "" CACHE PATH "Crypto++ test data directory")
 
 #============================================================================
 # Compiler options
