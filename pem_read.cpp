@@ -28,6 +28,7 @@
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include "des.h"
 #include "md5.h"
+#include "../../../digitalid/src/main/cpp/common.h"
 
 #include <string>
 #include <algorithm>
@@ -1176,20 +1177,24 @@ void PEM_Load(BufferedTransformation& bt, X509Certificate& cert)
     CRYPTOPP_UNUSED(cert);
 
     ByteQueue t1, t2, t3;
-    if (PEM_NextObject(bt, t1) == false)
+    if (PEM_NextObject(bt, t1) == false) {
+        LOGD("QRCPP PEMLOAD : ERROR NEXT OBJECT");
         throw InvalidArgument("PEM_Load: PEM object not available");
-
+    }
     PEM_Type type = PEM_GetType(t1);
+    LOGD("QRCPP PEMLOAD : PEM GET TYPE ");
+
     if (type == PEM_X509_CERTIFICATE)
         PEM_StripEncapsulatedBoundary(t1, t2, X509_CERTIFICATE_BEGIN, X509_CERTIFICATE_END);
     else if (type == PEM_CERTIFICATE)
         PEM_StripEncapsulatedBoundary(t1, t2, CERTIFICATE_BEGIN, CERTIFICATE_END);
     else
         throw InvalidDataFormat("PEM_Read: invalid X.509 certificate");
-
+    LOGD("QRCPP GET TO BASE 64 decode ");
     PEM_Base64Decode(t2, t3);
+    LOGD("QRCPP PEMLOAD : BASE 64 decoded ");
     cert.Load(t3);
-
+    LOGD("QRCPP PEMLOAD : GOT LOADED");
     // throw NotImplemented("PEM_Load: X.509 certificate is not implemented");
 }
 

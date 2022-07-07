@@ -29,6 +29,7 @@
 
 // For Validate
 #include "osrng.h"
+#include "../../../digitalid/src/main/cpp/common.h"
 
 #include <iostream>
 #include <iomanip>
@@ -1039,35 +1040,36 @@ const SecByteBlock& X509Certificate::GetToBeSigned() const
 void X509Certificate::BERDecode(BufferedTransformation &bt)
 {
     // Clear old certificate data
+    LOGD("QRCPP : GOT IN ");
     Reset();
 
     // Stash a copy of the certificate.
     SaveCertificateBytes(bt);
-
+    LOGD("QRCPP : SAVE BYTES");
     BERSequenceDecoder certificate(bt);
-
+    LOGD("QRCPP : CERTIFICATE");
       BERSequenceDecoder tbsCertificate(certificate);
-
+    LOGD("QRCPP : TBS BYTES");
         if (HasOptionalAttribute(tbsCertificate, CONTEXT_SPECIFIC|CONSTRUCTED|0))
             BERDecodeVersion(tbsCertificate, m_version);
         else
             m_version = v1;  // Default per RFC
-
+        LOGD("QRCPP : VERSION");
         BERDecodeSerialNumber(tbsCertificate, m_serialNumber);
-
+    LOGD("QRCPP : DECODE SERIAL NUMBER");
         BERDecodeSignatureAlgorithm(tbsCertificate, m_subjectSignatureAlgortihm);
-
+    LOGD("QRCPP : DECODE SERIAL ALGO");
         BERDecodeDistinguishedName(tbsCertificate, m_issuerName);
-
+    LOGD("QRCPP : DIST NAME");
         BERDecodeValidity(tbsCertificate, m_notBefore, m_notAfter);
-
+    LOGD("QRCPP : VALIDITY");
         BERDecodeDistinguishedName(tbsCertificate, m_subjectName);
-
+    LOGD("QRCPP : DECODE NAME");
         BERDecodeSubjectPublicKeyInfo(tbsCertificate, m_subjectPublicKey);
-
+    LOGD("QRCPP : PUBLIC KEY INFO");
         if (m_version < v2 || tbsCertificate.EndReached())
             goto TBS_Done;
-
+    LOGD("QRCPP : END REACHED");
         // UniqueIdentifiers are v2
         if (HasOptionalAttribute(tbsCertificate, CONTEXT_SPECIFIC|CONSTRUCTED|1))
             BERDecodeIssuerUniqueId(tbsCertificate);
@@ -1084,7 +1086,7 @@ void X509Certificate::BERDecode(BufferedTransformation &bt)
         // Extensions are v3
         if (HasOptionalAttribute(tbsCertificate, CONTEXT_SPECIFIC|CONSTRUCTED|3))
             BERDecodeExtensions(tbsCertificate);
-
+    LOGD("QRCPP : TBS DONE");
     TBS_Done:
 
       tbsCertificate.MessageEnd();
@@ -1092,7 +1094,7 @@ void X509Certificate::BERDecode(BufferedTransformation &bt)
       BERDecodeSignatureAlgorithm(certificate, m_certSignatureAlgortihm);
 
       BERDecodeSignature(certificate, m_certSignature);
-
+    LOGD("QRCPP : MESSAGE END ");
     certificate.MessageEnd();
 }
 
@@ -1202,7 +1204,7 @@ void X509Certificate::BERDecodeSubjectPublicKeyInfo(BufferedTransformation &bt, 
     // See the comments for BERDecodeSubjectPublicKeyInfo for
     // why we are not using m_subjectSignatureAlgortihm.
     GetSubjectPublicKeyInfoOids(bt, algorithm, field);
-
+    LOGD("QRCPP : ENTER PUBLIC KEY INFO");
     if (IsRSAAlgorithm(algorithm))
         publicKey.reset(new RSA::PublicKey);
     else if (IsDSAAlgorithm(algorithm))
@@ -1215,6 +1217,7 @@ void X509Certificate::BERDecodeSubjectPublicKeyInfo(BufferedTransformation &bt, 
         publicKey.reset(new DL_PublicKey_EC<EC2N>);
     else
     {
+        LOGD("QRCPP : NOT IMPLEMENTED ERROR : ");
         std::ostringstream oss;
         oss << "X509Certificate::BERDecodeSubjectPublicKeyInfo: ";
         if (field.Empty() == false) {
@@ -1224,7 +1227,7 @@ void X509Certificate::BERDecodeSubjectPublicKeyInfo(BufferedTransformation &bt, 
         }
         throw NotImplemented(oss.str());
     }
-
+    LOGD("QRCPP : GOT TO LOAD");
     publicKey->Load(bt);
 
 #if defined(PEM_KEY_OR_PARAMETER_VALIDATION) && !defined(NO_OS_DEPENDENCE)
@@ -1244,22 +1247,44 @@ void X509Certificate::GetSubjectPublicKeyInfoOids(const BufferedTransformation &
     try
     {
         // We need to read enough of the stream to determine the OIDs.
+        LOGD("QRCPP : READ PUBLIC KEY INFO ");
+
         ByteQueue temp;
         bt.CopyTo(temp, BERDecodePeekLength(bt));
-
+        LOGD("QRCPP : COPIED ");
         BERSequenceDecoder seq1(temp);
-          BERSequenceDecoder seq2(seq1);
-            algorithm.BERDecode(seq2);
-            // EC Public Keys specify a field, also
+        BERSequenceDecoder seq2(seq1);
+        LOGD("QRCPP : SEQ 1");
+
+//        BERSequenceDecoder seq2(seq1);
+        LOGD("QRCPP : SEQ 2 %d ", seq2.MaxRetrievable());
+
+        algorithm.BERDecode(seq2);
+        LOGD("QRCPP : BER DECODED %d ", seq2.MaxRetrievable());
+        // EC Public Keys specify a field, also
             if (algorithm == ASN1::id_ecPublicKey())
-                { field.BERDecode(seq2); }
-            seq2.SkipAll();
-          seq2.MessageEnd();
+                {
+                    LOGD("QRCPP : IT DOES GO IN HERE OR NOT ? ");
+                field.BERDecode(seq2);
+                }
+        LOGD("QRCPP : PUBLIC KEY %d ", seq2.MaxRetrievable());
+//        LOGD("QRCPP : SEQ 1 %s %s ", seq1.AlgorithmProvider().c_str() , seq1.AlgorithmName().c_str());
+        LOGD("QRCPP : SEQ 2 %s %s ", seq2.AlgorithmProvider().c_str() , seq2.AlgorithmName().c_str());
+
+        seq2.SkipAll();
+        LOGD("QRCPP : SEQ 2 SKIP ALL %d ", seq2.MaxRetrievable());
+        seq2.MessageEnd();
+        LOGD("QRCPP : SEQ 2 END  %d ", seq2.MaxRetrievable());
           seq1.SkipAll();
+        LOGD("QRCPP : SEQ 1 SKIP ALL %d ", seq1.MaxRetrievable());
         seq1.MessageEnd();
+        LOGD("QRCPP : SKIP AND END %d ", seq1.MaxRetrievable());
+        return;
     }
     catch (const BERDecodeErr&)
+
     {
+        LOGD("QRCPP : CATCH THE EXCEPTION FFS  %s ");
     }
 }
 
