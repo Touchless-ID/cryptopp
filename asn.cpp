@@ -9,7 +9,7 @@
 #include "cryptlib.h"
 #include "asn.h"
 #include "misc.h"
-#include "../../../digitalid/src/main/cpp/common.h"
+#include "common.h"
 
 #include <iostream>
 #include <iomanip>
