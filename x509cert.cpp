@@ -29,7 +29,7 @@
 
 // For Validate
 #include "osrng.h"
-#include "../../../digitalid/src/main/cpp/common.h"
+#include "common.h"
 
 #include <iostream>
 #include <iomanip>
