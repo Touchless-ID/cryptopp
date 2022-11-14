@@ -28,7 +28,7 @@
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include "des.h"
 #include "md5.h"
-#include "../../../digitalid/src/main/cpp/common.h"
+#include "common.h"
 
 #include <string>
 #include <algorithm>
