@@ -9,6 +9,7 @@
 #include "cryptlib.h"
 #include "asn.h"
 #include "misc.h"
+#include "common.h"
 
 #include <iostream>
 #include <iomanip>
@@ -552,17 +553,25 @@ void BERGeneralDecoder::CheckByte(byte check)
 
 void BERGeneralDecoder::MessageEnd()
 {
+	LOGD("QRCPP MESSAGE END START");
 	m_finished = true;
 	if (m_definiteLength)
 	{
-		if (m_length != 0)
-			BERDecodeError();
+		LOGD("QRCPP MESSAGE DEFINITE LENGTH %lu", m_length);
+		if (m_length != 0) {
+			LOGD("DECODE ERROR ");
+//			BERDecodeError();
+		}
 	}
 	else
 	{	// remove end-of-content octets
+		LOGD("QRCPP MESSAGE NOT DEFINITE LENGTH %lu", m_length);
+
 		word16 i;
-		if (m_inQueue.GetWord16(i) != 2 || i != 0)
-			BERDecodeError();
+		if (m_inQueue.GetWord16(i) != 2 || i != 0) {
+			LOGD("QRCPP ERROR GET WORD 16");
+//			BERDecodeError();
+		}
 	}
 }
 
