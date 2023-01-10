@@ -915,6 +915,8 @@ void PEM_Load(BufferedTransformation& bt, RSA::PrivateKey& rsa)
 
 void PEM_Load(BufferedTransformation& bt, RSA::PrivateKey& rsa, const char* password, size_t length)
 {
+    LOGD("ILG: LOADING FROM RSA");
+
     ByteQueue t1, t2, t3;
     if (PEM_NextObject(bt, t1) == false)
         throw InvalidArgument("PEM_Load: PEM object not available");
@@ -935,6 +937,8 @@ void PEM_Load(BufferedTransformation& bt, RSA::PrivateKey& rsa, const char* pass
         PEM_Base64Decode(t2, t3);
 
     PEM_LoadPrivateKey(t3, rsa, type == PEM_PRIVATE_KEY);
+
+    LOGD("ILG: FINISHED LOADING FROM RSA");
 }
 
 void PEM_Load(BufferedTransformation& bt, DSA::PublicKey& dsa)
@@ -1174,6 +1178,8 @@ void PEM_Load(BufferedTransformation& bt, DL_GroupParameters_DSA& params)
 
 void PEM_Load(BufferedTransformation& bt, X509Certificate& cert)
 {
+    LOGD("ILG: LOADING FROM x509");
+
     CRYPTOPP_UNUSED(cert);
 
     ByteQueue t1, t2, t3;
@@ -1196,6 +1202,8 @@ void PEM_Load(BufferedTransformation& bt, X509Certificate& cert)
     cert.Load(t3);
     LOGD("QRCPP PEMLOAD : GOT LOADED");
     // throw NotImplemented("PEM_Load: X.509 certificate is not implemented");
+
+    LOGD("ILG: FINISHED LOADING FROM x509");
 }
 
 void PEM_DH_Load(BufferedTransformation& bt, Integer& p, Integer& g)
