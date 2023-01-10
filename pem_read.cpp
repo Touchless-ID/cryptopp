@@ -916,6 +916,41 @@ void PEM_Load(BufferedTransformation& bt, RSA::PrivateKey& rsa)
 void PEM_Load(BufferedTransformation& bt, RSA::PrivateKey& rsa, const char* password, size_t length)
 {
     LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
+    LOGD("ILG: LOADING FROM RSA");
 
     ByteQueue t1, t2, t3;
     if (PEM_NextObject(bt, t1) == false)
@@ -1178,6 +1213,7 @@ void PEM_Load(BufferedTransformation& bt, DL_GroupParameters_DSA& params)
 
 void PEM_Load(BufferedTransformation& bt, X509Certificate& cert)
 {
+    LOGD("ILG: LOADING FROM x509");
     LOGD("ILG: LOADING FROM x509");
 
     CRYPTOPP_UNUSED(cert);
